@@ -15,6 +15,10 @@
   </dependencySets>
   <fileSets>
     <fileSet>
+        <directory>${project.build.directory}/target/appassembler/config</directory>
+        <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
       <directory>${project.build.outputDirectory}</directory>
       <outputDirectory>/</outputDirectory>
     </fileSet>

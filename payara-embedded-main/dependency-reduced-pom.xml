@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>payara-embedded</artifactId>
+    <groupId>com.nestvogel.pocs.cloudfoundry</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>payara-embedded-main</artifactId>
+  <name>payara-embedded-main</name>
+  <description>Startprojekt für Payara Server in CloudFoundry</description>
+  <build>
+    <resources>
+      <resource>
+        <directory>../payara-embedded-app/target</directory>
+        <includes>
+          <include>payara-embedded-app.war</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer>
+                  <mainClass>com.nestvogel.pocs.payara.embedded.payara.Startup</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>com.nestvogel.pocs.cloudfoundry</groupId>
+      <artifactId>payara-embedded-app</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <type>war</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
+

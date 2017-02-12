@@ -17,7 +17,7 @@ public class SampleBean {
 	}
 
 	public String getText() {
-		return "Hallo vom Payara.";
+		return "Hallo vom Payara." + System.getProperty("moinsen");
 	}
 
 }

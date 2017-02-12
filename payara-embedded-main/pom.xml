@@ -28,6 +28,12 @@
 			<version>4.1.153</version>
 			<type>jar</type>
 		</dependency>
+
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>6.1.3.jre8-preview</version>
+		</dependency>
 	</dependencies>
 
 
@@ -51,128 +57,47 @@
 				</configuration>
 			</plugin>
 
-			<!-- <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.5.0</version>
-				<dependencies>
-					<dependency>
-						<groupId>fish.payara.extras</groupId>
-						<artifactId>payara-micro</artifactId>
-						<version>4.1.1.162</version>
-					</dependency>
-				</dependencies>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
-						<id>payara-uber-jar</id>
 						<phase>package</phase>
 						<goals>
-							<goal>java</goal>
+							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<mainClass>fish.payara.micro.PayaraMicro</mainClass>
-							<arguments>
-								<argument>-/-deploy</argument>
-								<argument>payara-embedded-app/target/payara-embedded-app.war</argument>
-								<argument>-/-outputUberJar</argument>
-								<argument>${basedir}/target/${project.build.finalName}.jar</argument>
-							</arguments>
-							<includeProjectDependencies>false</includeProjectDependencies>
-							<includePluginDependencies>true</includePluginDependencies>
-							<executableDependency>
-								<groupId>fish.payara.extras</groupId>
-								<artifactId>payara-micro</artifactId>
-							</executableDependency>
+						          <filters>
+            <filter>
+              <artifact>*:*</artifact>
+              <excludes>
+                <exclude>META-INF/*.SF</exclude>
+                <exclude>META-INF/*.DSA</exclude>
+                <exclude>META-INF/*.RSA</exclude>
+              </excludes>
+            </filter>
+          </filters>
+						              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>com.nestvogel.pocs.payara.embedded.payara.Startup</mainClass>
+                </transformer>
+              </transformers>
+							<artifactSet>
+								<excludes>
+									<exclude>classworlds:classworlds</exclude>
+									<exclude>junit:junit</exclude>
+									<exclude>jmock:*</exclude>
+									<exclude>*:xml-apis</exclude>
+									<exclude>org.apache.maven:lib:tests</exclude>
+									<exclude>log4j:log4j:jar:</exclude>
+								</excludes>
+							</artifactSet>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin> -->
-
-			<!-- <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>appassembler-maven-plugin</artifactId>
-				<version>1.10</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>assemble</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<configurationDirectory>config</configurationDirectory>
-					<copyConfigurationDirectory>true</copyConfigurationDirectory>
-					<programs>
-						<program>
-							<mainClass>com.nestvogel.pocs.payara.embedded.payara.Startup</mainClass>
-							<id>embedded</id>
-						</program>
-					</programs>
-				</configuration>
-			</plugin> -->
-
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.5.5</version>
-				<configuration>
-					<descriptors>
-						<descriptor>src/main/assembly/bin.xml</descriptor>
-					</descriptors>
-					<archive>
-				      <manifest>
-				        <mainClass>com.nestvogel.pocs.payara.embedded.payara.Startup</mainClass>
-				        <addClasspath>true</addClasspath>
-				      </manifest>
-				    </archive>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>
 
-
-<!-- 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.5.0</version>
-				<dependencies>
-					<dependency>
-						<groupId>fish.payara.extras</groupId>
-						<artifactId>payara-micro</artifactId>
-						<version>4.1.1.162</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<id>payara-uber-jar</id>
-						<phase>package</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<configuration>
-							<mainClass>fish.payara.micro.PayaraMicro</mainClass>
-							<arguments>
-								<argument>-/-deploy</argument>
-								<argument>payara-embedded-app/target/payara-embedded-app.war</argument>
-								<argument>-/-outputUberJar</argument>
-								<argument>${basedir}/target/${project.build.finalName}.jar</argument>
-							</arguments>
-							<includeProjectDependencies>false</includeProjectDependencies>
-							<includePluginDependencies>true</includePluginDependencies>
-							<executableDependency>
-								<groupId>fish.payara.extras</groupId>
-								<artifactId>payara-micro</artifactId>
-							</executableDependency>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> -->
 		</plugins>
 	</build>
 

@@ -1,46 +1,52 @@
 package com.nestvogel.pocs.payara.embedded.payara;
 
-import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.embeddable.BootstrapProperties;
-import org.glassfish.embeddable.CommandResult;
-import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.embeddable.GlassFishProperties;
-import org.glassfish.embeddable.GlassFishRuntime;
+import org.springframework.cloud.Cloud;
+import org.springframework.cloud.CloudFactory;
+import org.springframework.cloud.service.ServiceInfo;
 
 public class Startup {
 
 	public static void main(String[] args) throws GlassFishException {
 
-		try {
-			BootstrapProperties bootstrap = new BootstrapProperties();
-
-			GlassFishRuntime runtime = GlassFishRuntime.bootstrap();
-			GlassFishProperties glassfishProperties = new GlassFishProperties();
-			glassfishProperties.setPort("http-listener", 8083);
-			glassfishProperties.setPort("https-listener", 8184);
-			GlassFish glassfish = runtime.newGlassFish(glassfishProperties);
-			glassfish.start();
-
-			String poolProperties = "user=sa:password=test:url=jdbc\\:derby\\:memory\\:db;create\\=true";
-			CommandResult res = glassfish.getCommandRunner().run("create-jdbc-connection-pool", "--ping",
-					"--restype=java.sql.Driver", "--driverclassname", "org.apache.derby.jdbc.EmbeddedDriver",
-					"--property", poolProperties, "MyPool");
-
-			System.out.println(res);
-			glassfish.getCommandRunner().run("create-system-properties", "JMS_PROVIDER_PORT=7676:moinsen=hallo");
-
-			InputStream inputStream = Startup.class.getClassLoader().getResourceAsStream("payara-embedded-app.war");
-
-			glassfish.getDeployer().deploy(inputStream, "--contextroot", "/");
-		}
-
-		catch (GlassFishException ex) {
-			Logger.getLogger(Startup.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		//try {
+			CloudFactory cloudFactory = new CloudFactory();
+			
+			Cloud cloud = cloudFactory.getCloud();
+			
+			
+			for (ServiceInfo service : cloud.getServiceInfos()) {
+				System.out.println(service);
+			};
+			
+			
+			
+			
+//			BootstrapProperties bootstrap = new BootstrapProperties();
+//
+//			GlassFishRuntime runtime = GlassFishRuntime.bootstrap();
+//			GlassFishProperties glassfishProperties = new GlassFishProperties();
+//			glassfishProperties.setPort("http-listener", 8083);
+//			glassfishProperties.setPort("https-listener", 8184);
+//			GlassFish glassfish = runtime.newGlassFish(glassfishProperties);
+//			glassfish.start();
+//
+//			String poolProperties = "user=sa:password=test:url=jdbc\\:derby\\:memory\\:db;create\\=true";
+//			CommandResult res = glassfish.getCommandRunner().run("create-jdbc-connection-pool", "--ping",
+//					"--restype=java.sql.Driver", "--driverclassname", "org.apache.derby.jdbc.EmbeddedDriver",
+//					"--property", poolProperties, "MyPool");
+//
+//			System.out.println(res);
+//			glassfish.getCommandRunner().run("create-system-properties", "JMS_PROVIDER_PORT=7676:moinsen=hallo");
+//
+//			InputStream inputStream = Startup.class.getClassLoader().getResourceAsStream("payara-embedded-app.war");
+//
+//			glassfish.getDeployer().deploy(inputStream, "--contextroot", "/");
+//		}
+//
+//		catch (GlassFishException ex) {
+//			Logger.getLogger(Startup.class.getName()).log(Level.SEVERE, null, ex);
+//		}
 
 		// set-log-attributes --target=server-config
 		// java.util.logging.FileHandler.pattern='%h/java%u.log'
